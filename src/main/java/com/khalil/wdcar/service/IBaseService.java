@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public interface IBaseService<E, D extends Serializable> extends IRsqlService<E, D > {
-    D save(D dto);
+    D save(D dto) throws Exception;
 
     D update(D dto);
 
