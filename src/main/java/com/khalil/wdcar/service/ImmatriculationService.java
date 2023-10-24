@@ -6,17 +6,25 @@ import com.khalil.wdcar.exception.InvalidInputException;
 import com.khalil.wdcar.exception.ResourceNotFoundException;
 import com.khalil.wdcar.repository.ImmatriculationRepository;
 import io.github.perplexhub.rsql.RSQLJPASupport;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
+@Service
 public class ImmatriculationService implements IBaseService<Immatriculation, ImmatriculationDto> {
     @Autowired
     private ImmatriculationRepository immatriculationRepository;
@@ -26,7 +34,10 @@ public class ImmatriculationService implements IBaseService<Immatriculation, Imm
     @Override
     @Transactional
     public ImmatriculationDto save(ImmatriculationDto immatriculationDto) {
-        return modelMapper.map(immatriculationRepository.save(modelMapper.map(immatriculationDto, Immatriculation.class)), ImmatriculationDto.class);
+        if (!existsImmatriculation(immatriculationDto))
+            return modelMapper.map(immatriculationRepository.save(modelMapper.map(immatriculationDto, Immatriculation.class)), ImmatriculationDto.class);
+        else
+            throw new InvalidInputException("This matriculation exists before");
     }
 
     @Override
@@ -69,5 +80,13 @@ public class ImmatriculationService implements IBaseService<Immatriculation, Imm
             size = 20;
         }
         return (Page<ImmatriculationDto>) modelMapper.map(immatriculationRepository.findAll(RSQLJPASupport.toSpecification(query), PageRequest.of(page, size, Sort.Direction.fromString(order), sort)), ImmatriculationDto.class);
+    }
+
+    public Long getLastId() {
+        return immatriculationRepository.getLastId().get(0);
+    }
+
+    public boolean existsImmatriculation(ImmatriculationDto immatriculationDto){
+        return immatriculationRepository.existsByCarNumberAndSeriesAndPrefectureRefId(immatriculationDto.getCarNumber(), immatriculationDto.getSeries(), immatriculationDto.getPrefectureRef().getId());
     }
 }

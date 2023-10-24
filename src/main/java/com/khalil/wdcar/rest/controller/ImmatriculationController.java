@@ -49,4 +49,8 @@ public class ImmatriculationController implements ImmatriculationApi {
     public void deleteImmatriculation(Long id) {
         immatriculationService.delete(id);
     }
+
+    public Long getLastId() {
+        return immatriculationService.getLastId();
+    }
 }

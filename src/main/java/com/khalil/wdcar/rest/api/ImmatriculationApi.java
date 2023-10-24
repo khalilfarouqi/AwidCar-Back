@@ -29,4 +29,6 @@ public interface ImmatriculationApi {
                         @RequestParam(defaultValue = "id") String sort);
     @GetMapping("/delete/{id}")
     void deleteImmatriculation(@PathVariable Long id);
+    @GetMapping("/lastId")
+    Long getLastId();
 }
