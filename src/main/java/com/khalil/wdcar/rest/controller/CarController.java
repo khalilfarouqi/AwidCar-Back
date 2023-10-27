@@ -1,5 +1,6 @@
 package com.khalil.wdcar.rest.controller;
 
+import com.khalil.wdcar.beans.CarRentalBean;
 import com.khalil.wdcar.dto.CarDto;
 import com.khalil.wdcar.rest.api.CarApi;
 import com.khalil.wdcar.service.*;
@@ -48,5 +49,9 @@ public class CarController implements CarApi {
     @Override
     public void deleteCar(Long id) {
         carService.delete(id);
+    }
+
+    public List<CarDto> findAllByQuery(CarRentalBean carRentalBean) {
+        return carService.findAllByQuery(carRentalBean);
     }
 }

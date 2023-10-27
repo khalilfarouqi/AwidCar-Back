@@ -1,5 +1,6 @@
 package com.khalil.wdcar.rest.api;
 
+import com.khalil.wdcar.beans.CarRentalBean;
 import com.khalil.wdcar.dto.CarDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
@@ -29,4 +30,6 @@ public interface CarApi {
                        @RequestParam(defaultValue = "id") String sort);
     @GetMapping("/delete/{id}")
     void deleteCar(@PathVariable Long id);
+    @GetMapping(value = "/findAllByQuery")
+    List<CarDto> findAllByQuery(@RequestBody CarRentalBean carRentalBean);
 }
