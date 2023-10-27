@@ -1,20 +1,25 @@
 package com.khalil.wdcar.service;
 
+import com.khalil.wdcar.beans.CarRentalBean;
 import com.khalil.wdcar.dto.CarDto;
 import com.khalil.wdcar.entity.Car;
 import com.khalil.wdcar.exception.*;
 import com.khalil.wdcar.repository.CarRepository;
 import io.github.perplexhub.rsql.RSQLJPASupport;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -26,6 +31,7 @@ public class CarService implements IBaseService<Car, CarDto> {
     private CarRepository carRepository;
     @Autowired
     private ModelMapper modelMapper;
+    private final EntityManager entityManager;
 
     @Override
     @Transactional
@@ -49,9 +55,9 @@ public class CarService implements IBaseService<Car, CarDto> {
 
     @Override
     public CarDto findById(Long id) {
-        CarDto carDto = modelMapper.map(carRepository.getById(id), CarDto.class);
-        if (carDto == null) throw new InvalidInputException("Car not fond");
-        return carDto;
+        Optional<Car> carDto = carRepository.findById(id);
+        if (!carDto.isPresent()) throw new InvalidInputException("Car not fond");
+        return modelMapper.map(carDto, CarDto.class);
     }
 
     @Override
@@ -72,6 +78,17 @@ public class CarService implements IBaseService<Car, CarDto> {
         if (size > 20) {
             size = 20;
         }
-        return (Page<CarDto>) modelMapper.map(carRepository.findAll(RSQLJPASupport.toSpecification(query), PageRequest.of(page, size, Sort.Direction.fromString(order), sort)), CarDto.class);
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(order), sort);
+        Specification<Car> a = RSQLJPASupport.toSpecification(query);
+        Page<Car> cars = carRepository.findAll(a, pageable);
+        Page<CarDto> carDtos = (Page<CarDto>) modelMapper.map(cars, CarDto.class);
+        return carDtos;
+    }
+    public List<CarDto> findAllByQuery(CarRentalBean carRentalBean){
+        List<CarDto> carDtoList = new ArrayList<>();
+        List<Car> carList = entityManager.createNativeQuery("select * from cars where " + carRentalBean.toQuery(), Car.class).getResultList();
+        for (Car car : carList)
+            carDtoList.add(modelMapper.map(car, CarDto.class));
+        return carDtoList;
     }
 }

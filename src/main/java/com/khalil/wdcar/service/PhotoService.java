@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -50,9 +51,9 @@ public class PhotoService implements IBaseService<Photo, PhotoDto> {
 
     @Override
     public PhotoDto findById(Long id) {
-        PhotoDto photoDto = modelMapper.map(photoRepository.findById(id).get(), PhotoDto.class);
-        if (photoDto == null) throw new InvalidInputException("Photo not fond");
-        return photoDto;
+        Optional<Photo> photoDto = photoRepository.findById(id);
+        if (!photoDto.isPresent()) throw new InvalidInputException("Photo not fond");
+        return modelMapper.map(photoDto, PhotoDto.class);
     }
 
     private PhotoDto convertEntityToDto(Photo photo){

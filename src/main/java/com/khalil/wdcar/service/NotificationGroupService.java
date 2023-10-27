@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -49,9 +50,9 @@ public class NotificationGroupService implements IBaseService<NotificationGroup,
 
     @Override
     public NotificationGroupDto findById(Long id) {
-        NotificationGroupDto notificationGroupDto = modelMapper.map(notificationGroupRepository.findById(id).get(), NotificationGroupDto.class);
-        if (notificationGroupDto == null) throw new InvalidInputException("notification Group not fond");
-        return notificationGroupDto;
+        Optional<NotificationGroup> notificationGroupDto = notificationGroupRepository.findById(id);
+        if (!notificationGroupDto.isPresent()) throw new InvalidInputException("notification Group not fond");
+        return modelMapper.map(notificationGroupDto, NotificationGroupDto.class);
     }
 
     @Override

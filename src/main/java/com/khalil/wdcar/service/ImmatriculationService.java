@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -56,9 +57,9 @@ public class ImmatriculationService implements IBaseService<Immatriculation, Imm
 
     @Override
     public ImmatriculationDto findById(Long id) {
-        ImmatriculationDto immatriculationDto = modelMapper.map(immatriculationRepository.getById(id), ImmatriculationDto.class);
-        if (immatriculationDto == null) throw new InvalidInputException("Immatriculation not fond");
-        return immatriculationDto;
+        Optional<Immatriculation> immatriculationDto = immatriculationRepository.findById(id);
+        if (!immatriculationDto.isPresent()) throw new InvalidInputException("Immatriculation not fond");
+        return modelMapper.map(immatriculationDto, ImmatriculationDto.class);
     }
 
     @Override

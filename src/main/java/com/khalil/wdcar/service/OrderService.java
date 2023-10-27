@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -49,9 +50,9 @@ public class OrderService implements IBaseService<Order, OrderDto> {
 
     @Override
     public OrderDto findById(Long id) {
-        OrderDto orderDto = modelMapper.map(orderRepository.findById(id).get(), OrderDto.class);
-        if (orderDto == null) throw new InvalidInputException("Order not fond");
-        return orderDto;
+        Optional<Order> orderDto = orderRepository.findById(id);
+        if (!orderDto.isPresent()) throw new InvalidInputException("Order not fond");
+        return modelMapper.map(orderDto, OrderDto.class);
     }
 
     @Override

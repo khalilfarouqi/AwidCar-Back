@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -48,9 +49,9 @@ public class NotificationService implements IBaseService<Notification, Notificat
 
     @Override
     public NotificationDto findById(Long id) {
-        NotificationDto notificationDto = modelMapper.map(notificationRepository.findById(id).get(), NotificationDto.class);
-        if (notificationDto == null) throw new InvalidInputException("Notification not fond");
-        return notificationDto;
+        Optional<Notification> notificationDto = notificationRepository.findById(id);
+        if (!notificationDto.isPresent()) throw new InvalidInputException("Notification not fond");
+        return modelMapper.map(notificationDto, NotificationDto.class);
     }
 
     @Override

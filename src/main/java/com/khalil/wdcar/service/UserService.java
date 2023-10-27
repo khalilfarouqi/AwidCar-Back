@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -48,9 +49,9 @@ public class UserService implements IBaseService<User, UserDto> {
 
     @Override
     public UserDto findById(Long id) {
-        UserDto userDto = modelMapper.map(userRepository.findById(id).get(), UserDto.class);
-        if (userDto == null) throw new InvalidInputException("User not fond");
-        return userDto;
+        Optional<User> userDto = userRepository.findById(id);
+        if (!userDto.isPresent()) throw new InvalidInputException("User not fond");
+        return modelMapper.map(userDto, UserDto.class);
     }
 
     @Override
