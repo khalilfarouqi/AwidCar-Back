@@ -1,10 +1,12 @@
 package com.khalil.wdcar.service;
 
+import com.khalil.wdcar.beans.CarRentalBean;
 import com.khalil.wdcar.dto.ClientDto;
 import com.khalil.wdcar.entity.Client;
 import com.khalil.wdcar.exception.*;
 import com.khalil.wdcar.repository.ClientRepository;
 import io.github.perplexhub.rsql.RSQLJPASupport;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,6 +30,7 @@ public class ClientService implements IBaseService<Client, ClientDto> {
     private ClientRepository clientRepository;
     @Autowired
     private ModelMapper modelMapper;
+    private final EntityManager entityManager;
     @Override
     @Transactional
     public ClientDto save(ClientDto client) {
@@ -71,5 +75,12 @@ public class ClientService implements IBaseService<Client, ClientDto> {
             size = 20;
         }
         return (Page<ClientDto>) modelMapper.map(clientRepository.findAll(RSQLJPASupport.toSpecification(query), PageRequest.of(page, size, Sort.Direction.fromString(order), sort)), ClientDto.class);
+    }
+    public List<ClientDto> findAllByQuery(CarRentalBean carRentalBean){
+        List<ClientDto> clientDtoListList = new ArrayList<>();
+        List<Client> clientList = entityManager.createNativeQuery("select * from clients where " + carRentalBean.toQuery("client"), Client.class).getResultList();
+        for (Client client : clientList)
+            clientDtoListList.add(modelMapper.map(client, ClientDto.class));
+        return clientDtoListList;
     }
 }

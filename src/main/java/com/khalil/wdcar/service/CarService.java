@@ -86,7 +86,7 @@ public class CarService implements IBaseService<Car, CarDto> {
     }
     public List<CarDto> findAllByQuery(CarRentalBean carRentalBean){
         List<CarDto> carDtoList = new ArrayList<>();
-        List<Car> carList = entityManager.createNativeQuery("select * from cars where " + carRentalBean.toQuery(), Car.class).getResultList();
+        List<Car> carList = entityManager.createNativeQuery("select * from cars where " + carRentalBean.toQuery("car"), Car.class).getResultList();
         for (Car car : carList)
             carDtoList.add(modelMapper.map(car, CarDto.class));
         return carDtoList;
