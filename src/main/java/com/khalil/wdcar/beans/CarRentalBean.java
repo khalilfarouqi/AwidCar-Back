@@ -13,7 +13,7 @@ public class CarRentalBean {
     private String name;
     private String brande;
     private String style;
-    private String adress;
+    private String address;
     private String cin;
     private String city;
     private String country;
@@ -29,7 +29,7 @@ public class CarRentalBean {
             if (style != null) joiner.add("style like '" + style.trim() + "%'");
         }
         if (cases == "client") {
-            if (adress != null) joiner.add("adress like '" + adress.trim() + "%'");
+            if (address != null) joiner.add("adress like '" + address.trim() + "%'");
             if (cin != null) joiner.add("cin like '" + cin.trim() + "%'");
             if (city != null) joiner.add("city like '" + city.trim() + "%'");
             if (country != null) joiner.add("country like '" + country.trim() + "%'");
@@ -46,7 +46,7 @@ public class CarRentalBean {
         rentalBean.setBrande(label);
         rentalBean.setStyle(label);
 
-        rentalBean.setAdress(label);
+        rentalBean.setAddress(label);
         rentalBean.setCin(label);
         rentalBean.setCity(label);
         rentalBean.setCountry(label);
