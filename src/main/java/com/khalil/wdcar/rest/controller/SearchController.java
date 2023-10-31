@@ -1,6 +1,6 @@
 package com.khalil.wdcar.rest.controller;
 
-import com.khalil.wdcar.beans.CarRentalBean;
+import com.khalil.wdcar.beans.RentalBean;
 import com.khalil.wdcar.rest.api.SearchApi;
 import com.khalil.wdcar.service.SearchService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 public class SearchController implements SearchApi {
     public final SearchService searchService;
-    public List<CarRentalBean> getSearch(String label) {
+    public List<RentalBean> getSearch(String label) {
         return searchService.getSearch(label);
     }
 }
