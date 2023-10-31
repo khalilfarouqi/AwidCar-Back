@@ -46,13 +46,13 @@ public class SearchService {
 
     private List<RentalBean> mapToRentalBeans(Object dto, String label, String tableName) {
         List<RentalBean> result = new ArrayList<>();
-        RentalBean rentalBean = new RentalBean();
 
         if (dto instanceof CarDto) {
-            CarDto car = (CarDto) dto;
-            rentalBean.setTableName(tableName);
-            rentalBean.setIdColum(car.getId());
             for (String column : new String[]{"name", "brande", "style"}) {
+                RentalBean rentalBean = new RentalBean();
+                CarDto car = (CarDto) dto;
+                rentalBean.setTableName(tableName);
+                rentalBean.setIdColum(car.getId());
                 String columnValue = getColumnValue(car, column);
                 if (columnValue != null && columnValue.startsWith(label)) {
                     rentalBean.setColumName(column);
@@ -61,10 +61,11 @@ public class SearchService {
                 }
             }
         } else if (dto instanceof ClientDto) {
-            ClientDto client = (ClientDto) dto;
-            rentalBean.setTableName(tableName);
-            rentalBean.setIdColum(client.getId());
             for (String column : new String[]{"adress", "cin", "city", "country", "first_name", "last_name", "licence", "user_name"}) {
+                RentalBean rentalBean = new RentalBean();
+                ClientDto client = (ClientDto) dto;
+                rentalBean.setTableName(tableName);
+                rentalBean.setIdColum(client.getId());
                 String methodName = getMethodName(column);
                 String columnValue = getColumnValue(client, methodName);
                 if (columnValue != null && columnValue.startsWith(label)) {
