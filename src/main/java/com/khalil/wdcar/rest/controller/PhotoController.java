@@ -45,4 +45,7 @@ public class PhotoController implements PhotoApi {
     public Page<PhotoDto> search(String query, Integer page, Integer size, String order, String sort) {
         return photoService.rsqlQuery(query, page, size, order, sort);
     }
+    public Long getLastId() {
+        return photoService.getLastId();
+    }
 }

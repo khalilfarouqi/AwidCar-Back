@@ -27,4 +27,6 @@ public interface PhotoApi {
                        @RequestParam(defaultValue = "10") Integer size,
                        @RequestParam(defaultValue = "asc") String order,
                        @RequestParam(defaultValue = "id") String sort);
+    @GetMapping("/lastId")
+    Long getLastId();
 }

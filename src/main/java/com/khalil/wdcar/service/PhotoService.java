@@ -76,4 +76,7 @@ public class PhotoService implements IBaseService<Photo, PhotoDto> {
         }
         return (Page<PhotoDto>) modelMapper.map(photoRepository.findAll(RSQLJPASupport.toSpecification(query), PageRequest.of(page, size, Sort.Direction.fromString(order), sort)), PhotoDto.class);
     }
+    public Long getLastId() {
+        return photoRepository.getLastId().get(0);
+    }
 }
