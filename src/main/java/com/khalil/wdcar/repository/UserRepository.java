@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> findAll(Specification spec, Pageable pageable);
+    Boolean existsByIdAndPassWord(Long id, String currentPassword);
 }

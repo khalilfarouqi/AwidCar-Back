@@ -74,4 +74,8 @@ public class UserService implements IBaseService<User, UserDto> {
         }
         return (Page<UserDto>) modelMapper.map(userRepository.findAll(RSQLJPASupport.toSpecification(query), PageRequest.of(page, size, Sort.Direction.fromString(order), sort)), UserDto.class);
     }
+
+    public Boolean existsPassWord(Long id, String currentPassword) {
+        return userRepository.existsByIdAndPassWord(id, currentPassword);
+    }
 }

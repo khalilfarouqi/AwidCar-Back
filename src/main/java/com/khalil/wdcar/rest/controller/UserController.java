@@ -44,4 +44,9 @@ public class UserController implements UserApi {
     public Page<UserDto> search(String query, Integer page, Integer size, String order, String sort) {
         return userService.rsqlQuery(query, page, size, order, sort);
     }
+
+    @Override
+    public Boolean existsPassWord(Long id, String currentPassword) {
+        return userService.existsPassWord(id, currentPassword);
+    }
 }

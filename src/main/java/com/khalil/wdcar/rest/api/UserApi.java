@@ -27,4 +27,6 @@ public interface UserApi {
                        @RequestParam(defaultValue = "10") Integer size,
                        @RequestParam(defaultValue = "asc") String order,
                        @RequestParam(defaultValue = "id") String sort);
+    @GetMapping(value = "existPassword/{id}/{currentPassword}")
+    Boolean existsPassWord(@PathVariable("id") Long id, @PathVariable("currentPassword") String currentPassword);
 }
